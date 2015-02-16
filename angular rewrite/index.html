@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="arduino">
+
+<head>
+    <title>Arduino</title>
+    <meta charset="utf-8">
+    <link rel="stylesheet" href="css/style.css" type="text/css">
+    <script src="http://code.jquery.com/jquery.min.js"></script>
+    <link href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
+    <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script>
+    <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.3.2/angular.min.js"></script>
+    <script type="text/javascript" src="app.js"></script>
+</head>
+
+<body>
+    <nav class="navbar navbar-default" style="border-radius: 0;">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <a class="navbar-brand" href="#">
+                    Arduino Controller
+                </a>
+            </div>
+        </div>
+    </nav>
+
+
+    <form ng-controller="addPinController as addPin" class="bar" id="pin-setup" role="form">
+        <select ng-model="addPin.selectedPin" ng-options="test for test in addPin.pins" id="pin-selection" class="form-control" style="max-width: 100px; display: inline-block; text-align: center;">
+            <option value="">Select pin</option>
+        </select>
+
+        <select ng-model="addPin.selectedType" ng-options="test for test in addPin.type" id="pin-selection" class="form-control" style="max-width: 150px; text-align: center; display: inline-block;">
+            <option value="">Select type</option>
+        </select>
+
+
+        <input class="btn btn-success" value="Add pin {{addPin.selectedPin}} {{addPin.selectedType ? 'as ' + addPin.selectedType : null}}" ng-disabled="addPin.selectClass()" type="submit" style="min-width: 150px" ng-click="addPin.addPin()">
+    </form>
+
+
+
+    <div ng-controller="pinController as pins " class="container" id="pinBoxes">
+        <div ng-repeat="pin in pins.pins" class="box btn" ng-class="pins.selectClass(pin)" ng-click="pins.toggle(pin)">
+            Pin {{pin.pin}}
+        </div>
+    </div>
+</body>
+
+</html>
