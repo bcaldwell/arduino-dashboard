@@ -9,6 +9,7 @@
     <link href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
     <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script>
     <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.3.2/angular.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/angular-filter/0.5.1/angular-filter.js"></script>
     <script type="text/javascript" src="app.js"></script>
 </head>
 
@@ -40,8 +41,11 @@
 
 
     <div ng-controller="pinController as pins " class="container" id="pinBoxes">
-        <div ng-repeat="pin in pins.pins" class="box btn" ng-class="pins.selectClass(pin)" ng-click="pins.toggle(pin)">
-            Pin {{pin.pin}}
+        <div ng-repeat="pin in pins.pins | toArray | orderBy: 'id'" class="box btn " ng-class="pins.selectClass(pin) " ng-click="pins.toggle(pin) ">
+            Pin {{pin.pin}} <span style="font-size:10px;">{{pin.type}}</span>
+        </div>
+        <div class="box btn btn-warning" style="min-width: 100%" ng-hide="pins.count()">
+            Add a pin to get started
         </div>
     </div>
 </body>

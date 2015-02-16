@@ -1,5 +1,5 @@
 (function () {
-    var app = angular.module('arduino', []);
+    var app = angular.module('arduino', ['angular.filter']);
 
     app.controller('addPinController', ['pinFactory', function (pinFactory) {
         var that = this;
@@ -17,16 +17,17 @@
         }
 
         this.addPin = function () {
-            pinFactory.push({
+            pinFactory.pins[that.selectedPin] = {
                 pin: that.selectedPin,
                 status: false,
-                type: that.selectedType
-            });
+                type: that.selectedType,
+                id: ++pinFactory.id
+            };
         };
     }]);
 
     app.controller('pinController', ['pinFactory', function (pinFactory) {
-        this.pins = pinFactory;
+        this.pins = pinFactory.pins;
 
         this.selectClass = function (pin) {
             if (pin.status) {
@@ -38,21 +39,16 @@
         this.toggle = function (pin) {
             pin.status = pin.status * (-1) + 1;
         };
+
+        this.count = function () {
+            return Object.keys(this.pins).length;
+        }
     }]);
 
     app.factory('pinFactory', function () {
-        return [{
-            pin: 4,
-            status: false,
-            type: "input"
-                }, {
-            pin: 5,
-            status: true,
-            type: "input"
-                }, {
-            pin: 8,
-            status: true,
-            type: "input"
-                }];
+        return {
+            id: 3,
+            pins: {}
+        };
     });
 })();
