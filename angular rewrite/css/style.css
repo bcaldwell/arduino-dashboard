@@ -5,8 +5,7 @@ body {
 }
 
 .box {
-    height: 75px;
-    line-height: 70px !important;
+    height: 150px;
     font-size: 25px !important;
     min-width: 200px;
     max-width: 200px;
@@ -39,4 +38,35 @@ body {
 
 #pin-setup {
     text-align: center;
+}
+
+.fill-space {
+    height: 100% !important;
+    width: 100% !important;
+}
+
+.ful-width {
+    width: 100% !important;
+}
+
+.full-height {
+    height: 100% !important;
+}
+
+.table {
+    display: table !important;
+}
+
+.inline-table {
+    display: inline-table !important;
+}
+
+.table-center {
+    display: table-cell !important;
+    vertical-align: middle !important;
+    text-align: center !important;
+}
+
+.font-20 {
+    font-size: 20px !important
 }
