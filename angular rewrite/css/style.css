@@ -70,3 +70,7 @@ body {
 .font-20 {
     font-size: 20px !important
 }
+
+.center {
+    text-align: center !important;
+}

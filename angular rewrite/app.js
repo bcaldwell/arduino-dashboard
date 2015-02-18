@@ -26,7 +26,7 @@
         };
     }]);
 
-    app.controller('pinController', ['$scope', 'pinFactory', function ($scope, pinFactory) {
+    app.controller('pinController', ['pinFactory', function (pinFactory) {
         this.pins = pinFactory.pins;
 
         this.selectClass = function (pin) {
@@ -43,72 +43,91 @@
         this.count = function () {
             return Object.keys(this.pins).length;
         }
+    }]);
 
-        this.chartConfig = {
+    app.controller('highchartsController', ['pinFactory', function (pinFactory) {
+        this.solidGaugeSmall = {
             options: {
                 chart: {
                     type: 'solidgauge',
                     backgroundColor: 'rgba(0,0,0,0)'
+
                 },
+                title: null,
                 pane: {
                     center: ['50%', '85%'],
-                    size: '180%',
-                    startAngle: -90,
-                    endAngle: 90,
+                    size: '160%',
+                    startAngle: -75,
+                    endAngle: 75,
                     background: {
-                        backgroundColor: 'rgba(0,0,0,0)',
+                        backgroundColor: (Highcharts.theme && Highcharts.theme.background2) || '#EEE',
                         innerRadius: '60%',
                         outerRadius: '100%',
                         shape: 'arc'
                     }
                 },
-                solidgauge: {
-                    dataLabels: {
-                        enabled: false,
-                    }
-                },
-                tooltip: {
-                    enabled: false
-                },
             },
             series: [{
-                data: [6],
+                name: 'boo',
+                data: [1],
                 dataLabels: {
-                    format: '{y}',
-                    enabled: false
+                    format: '<div style="text-align:center"><span style="font-size:20px;color:' +
+                        ((Highcharts.theme && Highcharts.theme.contrastTextColor) || 'black') + '">{y}</span></div>'
                 }
-                }],
-            title: {
-                text: 'Solid Gauge',
-            },
+        }],
             yAxis: {
-                currentMin: 0,
-                currentMax: 20,
-                title: {
-                    y: 140
-                },
+                min: 0,
+                max: 1,
                 stops: [
-                        [0.1, '#DF5353'], // red
-                  [0.5, '#DDDF0D'], // yellow
-                  [0.9, '#55BF3B'] // green
-           ],
+                [0, '#DF5353'], // green
+                [1, '#55BF3B'] // red
+                ],
                 lineWidth: 0,
-                tickInterval: 20,
+                minorTickInterval: null,
                 tickPixelInterval: 400,
                 tickWidth: 0,
+                title: {
+                    text: null,
+                    y: -70
+                },
                 labels: {
-                    y: 15
+                    y: 16
+                }
+            },
+            credits: {
+                enabled: false
+            },
+            series: [{
+                name: null,
+                data: [1],
+                dataLabels: {
+                    format: '<div style="text-align:center"><span style="font-size:25px;color:' + ((Highcharts.theme && Highcharts.theme.contrastTextColor) || 'black') + '">{y}</span></div>'
+                }
+        }],
+            plotOptions: {
+                solidgauge: {
+                    dataLabels: {
+                        y: 5,
+                        borderWidth: 0,
+                        useHTML: true
+                    }
                 }
             },
             loading: false
         }
     }]);
 
-
     app.factory('pinFactory', function () {
         return {
-            id: 3,
-            pins: {}
+            id: 0,
+            pins: {
+                1: {
+                    pin: 4,
+                    status: false,
+                    type: "Digital Read",
+                    id: 1
+                }
+            }
         };
     });
 })();

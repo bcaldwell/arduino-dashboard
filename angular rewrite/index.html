@@ -21,7 +21,7 @@
 
     <!--    highcharts-->
     <script src="//rawgit.com/pablojim/highcharts-ng/master/src/highcharts-ng.js"></script>
-    <script src="http://code.highcharts.com/highcharts.src.js"></script>
+    <script src="http://code.highcharts.com/highcharts.js"></script>
     <script src="http://code.highcharts.com/highcharts-more.js"></script>
     <script src="http://code.highcharts.com/modules/solid-gauge.js"></script>
 </head>
@@ -61,8 +61,9 @@
 
             </div>
 
-            <div ng-show="pin.type == 'Digital Read'" class="fill-space btn btn-default">
-                <highchart id="chart1" config="pins.chartConfig" style="height: 100%; width: 100%; background: transparent;"></highchart>
+            <div ng-show="pin.type == 'Digital Read'" class="fill-space btn btn-default" ng-controller="highchartsController as highcharts">
+                <div class="center font-20 full-width"> Pin {{pin.pin}}</div>
+                <highchart id="chart1" config="highcharts.solidGaugeSmall" style="height: 120px; width: 100%; background: transparent;"></highchart>
             </div>
 
 
