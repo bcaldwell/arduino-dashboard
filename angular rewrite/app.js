@@ -37,6 +37,7 @@
         }
 
         this.toggle = function (pin) {
+            console.log(pin);
             pin.status = pin.status * (-1) + 1;
         };
 
@@ -45,7 +46,30 @@
         }
     }]);
 
-    app.controller('highchartsController', ['pinFactory', function (pinFactory) {
+    app.controller('highchartsController', ['$scope', 'pinFactory', function ($scope, pinFactory) {
+
+        var that = this;
+        this.pin = {
+            status: 0
+        };
+        this.init = function (pin) {
+            that.pin = pin;
+            console.log(that.pin);
+        }
+
+        $scope.$watch(function () {
+            return that.pin.status;
+        }, function (newValue, oldValue) {
+            var chart = that.solidGaugeSmall.getHighcharts();
+            var point = chart.series[0].points[0];
+            point.update(newValue);
+        });
+
+        this.toggle = function (pin) {
+
+            that.pin.status = that.pin.status * (-1) + 1;
+        };
+
         this.solidGaugeSmall = {
             options: {
                 chart: {
@@ -66,13 +90,15 @@
                         shape: 'arc'
                     }
                 },
+                tooltip: {
+                    enabled: false
+                },
             },
             series: [{
                 name: 'boo',
                 data: [1],
                 dataLabels: {
-                    format: '<div style="text-align:center"><span style="font-size:20px;color:' +
-                        ((Highcharts.theme && Highcharts.theme.contrastTextColor) || 'black') + '">{y}</span></div>'
+                    enabled: false,
                 }
         }],
             yAxis: {
@@ -101,15 +127,13 @@
                 name: null,
                 data: [1],
                 dataLabels: {
-                    format: '<div style="text-align:center"><span style="font-size:25px;color:' + ((Highcharts.theme && Highcharts.theme.contrastTextColor) || 'black') + '">{y}</span></div>'
+                    enabled: false,
                 }
         }],
             plotOptions: {
                 solidgauge: {
                     dataLabels: {
-                        y: 5,
-                        borderWidth: 0,
-                        useHTML: true
+                        enabled: false
                     }
                 }
             },
@@ -120,14 +144,7 @@
     app.factory('pinFactory', function () {
         return {
             id: 0,
-            pins: {
-                1: {
-                    pin: 4,
-                    status: false,
-                    type: "Digital Read",
-                    id: 1
-                }
-            }
+            pins: {}
         };
     });
 })();

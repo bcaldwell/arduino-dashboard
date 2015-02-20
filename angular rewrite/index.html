@@ -5,6 +5,7 @@
     <title>Arduino</title>
     <meta charset="utf-8">
     <link rel="stylesheet" href="css/style.css" type="text/css">
+    <link rel="stylesheet" href="css/bstandard.css" type="text/css">
     <script src="http://code.jquery.com/jquery.min.js"></script>
 
     <!--    bootstrap-->
@@ -55,21 +56,20 @@
 
     <div ng-controller="pinController as pins " class="container" id="pinBoxes">
         <div ng-show="pins.count()" ng-repeat="pin in pins.pins | toArray | orderBy: 'id'" class="box">
-
-            <div class="fill-space btn inline-table" ng-class="pins.selectClass(pin) " ng-click="pins.toggle(pin) " ng-show="pin.type == 'Digital Write'">
+            <div class="fill-space btn inline-table" ng-class="pins.selectClass(pin) " ng-click="pins.toggle(pin)" ng-show="pin.type == 'Digital Write'">
                 <div class="table-center font-20"> Pin {{pin.pin}} {{pin.type}}</div>
 
             </div>
 
-            <div ng-show="pin.type == 'Digital Read'" class="fill-space btn btn-default" ng-controller="highchartsController as highcharts">
-                <div class="center font-20 full-width"> Pin {{pin.pin}}</div>
-                <highchart id="chart1" config="highcharts.solidGaugeSmall" style="height: 120px; width: 100%; background: transparent;"></highchart>
+            <div ng-show="pin.type == 'Digital Read'" ng-controller="highchartsController as highcharts" ng-init="highcharts.init(pin)" class="fill-space btn btn-default" ng-click="highcharts.toggle(pin)">
+                <div class=" center font-20 full-width "> Pin {{pin.pin}}</div>
+                <highchart id="chart1 " config="highcharts.solidGaugeSmall " style="height: 120px; width: 100%; background: transparent; "></highchart>
             </div>
 
 
         </div>
-        <div class="box btn btn-warning table" style="min-width: 100%" ng-hide="pins.count()">
-            <div class="table-center">
+        <div class="box btn btn-warning table " style="min-width: 100% " ng-hide="pins.count() ">
+            <div class="table-center ">
                 Add a pin to get started
             </div>
         </div>
