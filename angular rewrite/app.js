@@ -1,7 +1,12 @@
 (function () {
     var app = angular.module('arduino', ['angular.filter', 'highcharts-ng', 'ui.bootstrap']);
 
-    app.controller('addPinController', ['pinFactory', function (pinFactory) {
+    app.controller('addPinController', ['pinFactory', 'socket', function (pinFactory, socket) {
+
+        socket.on('test', function (data) {
+            console.log(data);
+        });
+
         var that = this;
         this.pins = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13];
         this.type = ["Digital Write", "Digital Read"]
@@ -9,24 +14,23 @@
         this.selectClass = function () {
             if (that.selectedPin && that.selectedType) {
                 return false;
-
-                return "btn-success";
             }
             return true;
-            return "btn-danger";
         }
 
         this.addPin = function () {
-            pinFactory.pins[that.selectedPin] = {
-                pin: that.selectedPin,
-                status: false,
-                type: that.selectedType,
-                id: ++pinFactory.id
-            };
+            socket.emit('new pin', that.selectedPin, function (state) {
+                pinFactory.pins[that.selectedPin] = {
+                    pin: that.selectedPin,
+                    status: state,
+                    type: that.selectedType,
+                    id: ++pinFactory.id
+                };
+            });
         };
     }]);
 
-    app.controller('pinController', ['pinFactory', function (pinFactory) {
+    app.controller('pinController', ['pinFactory', 'socket', function (pinFactory, socket) {
         this.pins = pinFactory.pins;
 
         this.selectClass = function (pin) {
@@ -37,8 +41,8 @@
         }
 
         this.toggle = function (pin) {
-            console.log(pin);
-            pin.status = pin.status * (-1) + 1;
+            //            pin.status = pin.status * (-1) + 1;
+            socket.emit('digitalWrite', pin.pin);
         };
 
         this.count = function () {
@@ -49,24 +53,21 @@
     app.controller('highchartsController', ['$scope', 'pinFactory', function ($scope, pinFactory) {
 
         var that = this;
-        this.pin = {
-            status: 0
-        };
         this.init = function (pin) {
             that.pin = pin;
-            console.log(that.pin);
+
+            $scope.$watch(function () {
+                return that.pin.status;
+            }, function (newValue, oldValue) {
+                if (that.solidGaugeSmall.getHighcharts().series[0]) {
+                    var chart = that.solidGaugeSmall.getHighcharts();
+                    var point = chart.series[0].points[0];
+                    point.update(newValue);
+                }
+            });
         }
 
-        $scope.$watch(function () {
-            return that.pin.status;
-        }, function (newValue, oldValue) {
-            var chart = that.solidGaugeSmall.getHighcharts();
-            var point = chart.series[0].points[0];
-            point.update(newValue);
-        });
-
         this.toggle = function (pin) {
-
             that.pin.status = that.pin.status * (-1) + 1;
         };
 
@@ -141,10 +142,44 @@
         }
     }]);
 
-    app.factory('pinFactory', function () {
-        return {
+    app.factory('pinFactory', ['socket', function (socket) {
+        var pinFactory = {
             id: 0,
             pins: {}
+        }
+
+        socket.on('digital:change', function (data) {
+            console.log(data);
+            if (pinFactory.pins[data.pin]) {
+                pinFactory.pins[data.pin].status = data.status;
+            };
+        });
+
+        return pinFactory;
+    }]);
+
+    app.factory('socket', function ($rootScope) {
+        var socket = io.connect();
+        return {
+            on: function (eventName, callback) {
+                socket.on(eventName, function () {
+                    var args = arguments;
+                    $rootScope.$apply(function () {
+                        callback.apply(socket, args);
+                    });
+                });
+            },
+            emit: function (eventName, data, callback) {
+                socket.emit(eventName, data, function () {
+                    var args = arguments;
+                    $rootScope.$apply(function () {
+                        if (callback) {
+                            callback.apply(socket, args);
+                        }
+                    });
+                })
+            }
         };
     });
+
 })();
