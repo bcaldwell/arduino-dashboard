@@ -1,10 +1,10 @@
 {
-  "name": "node-arduino",
-  "version": "0.0.1",
-  "description": "arduino",
-  "dependencies": {
-    "socket.io": "~0.9.6",
-     "mime": "~1.2.7",
-     "johnny-five": "latest"
-  }
+    "name": "node-arduino",
+    "version": "0.0.1",
+    "description": "arduino",
+    "dependencies": {
+        "socket.io": "latest",
+        "mime": "~1.2.7",
+        "johnny-five": "latest"
+    }
 }

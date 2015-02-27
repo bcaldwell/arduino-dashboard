@@ -105,9 +105,18 @@ Fn.square = function(x) {
   return x * x;
 };
 
-
+// Fn.sum( values )
+//
+// Returns the sum of all values from array
+//
 Fn.sum = function sum(values) {
-  return values.reduce(function(accum, value) {
+  var vals;
+  if (Array.isArray(values)) {
+    vals = values;
+  } else {
+    vals = [].slice.call(arguments);
+  }
+  return vals.reduce(function(accum, value) {
     return accum + value;
   }, 0);
 };

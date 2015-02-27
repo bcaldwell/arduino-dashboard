@@ -20,6 +20,7 @@
 
         this.addPin = function () {
             socket.emit('new pin', that.selectedPin, function (state) {
+                console.log("log" + state);
                 pinFactory.pins[that.selectedPin] = {
                     pin: that.selectedPin,
                     status: state,
