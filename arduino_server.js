@@ -1,45 +1,38 @@
 var toggle = require("./toggle");
 var digitalWrite = require("./digitalWrite");
+var digitalRead = require("./digitalRead");
 var socket = require('socket.io');
 var io;
 
 exports.listen = function (server, arduino, pins) {
 
-    //    var test = new digitalWrite(arduino, 3);
-    //    console.log(test.getStatus());
-    //    test.off();
-    //    console.log(test.getStatus());
-
     io = socket.listen(server);
 
     io.sockets.on('connection', function (socket) {
 
-
         socket.on('new pin', function (data, fn) {
-            data = parseInt(data);
-            console.log(data);
-
+            data.pin = parseInt(data.pin);
             //            check if pin has been initialized
-            if (!(typeof pins[data] === 'object')) {
-                console.log("Pin " + data + " will be initialized");
-                pins[data] = new digitalWrite(arduino, data);
+            if (!(typeof pins[data.pin] === 'object')) {
+                console.log("Pin " + data.pin + " will be initialized");
+                if (data.type === "Digital Write")
+                    pins[data.pin] = new digitalWrite(arduino, data.pin);
+                else if (data.type === "Digital Read")
+                    pins[data.pin] = new digitalRead(arduino, io, data.pin);
             }
-            fn(pins[data].getStatus());
-
-            //            fn();
-
-
-            //            toggle.initPin(arduino, pins, data);
-            //            var test = new digitalWrite(arduino, data);
-            //            fn(pins[data].status);
+            console.log(pins[data.pin].getStatus())
+            fn(pins[data.pin].getStatus());
         });
-
 
         socket.on('digitalWrite', function (data, fn) {
             data = parseInt(data);
             pins[data].toggle();
             io.sockets.emit('digital:change', {
                 pin: data,
+                status: pins[data].getStatus()
+            });
+            io.sockets.emit('digital:change', {
+                pin: 8,
                 status: pins[data].getStatus()
             });
         });

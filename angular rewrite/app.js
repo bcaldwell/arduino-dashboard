@@ -19,7 +19,10 @@
         }
 
         this.addPin = function () {
-            socket.emit('new pin', that.selectedPin, function (state) {
+            socket.emit('new pin', {
+                pin: that.selectedPin,
+                type: that.selectedType
+            }, function (state) {
                 console.log("log" + state);
                 pinFactory.pins[that.selectedPin] = {
                     pin: that.selectedPin,
@@ -56,6 +59,7 @@
         var that = this;
         this.init = function (pin) {
             that.pin = pin;
+            that.pin.status = 0;
 
             $scope.$watch(function () {
                 return that.pin.status;
@@ -67,10 +71,6 @@
                 }
             });
         }
-
-        this.toggle = function (pin) {
-            that.pin.status = that.pin.status * (-1) + 1;
-        };
 
         this.solidGaugeSmall = {
             options: {
@@ -96,13 +96,6 @@
                     enabled: false
                 },
             },
-            series: [{
-                name: 'boo',
-                data: [1],
-                dataLabels: {
-                    enabled: false,
-                }
-        }],
             yAxis: {
                 min: 0,
                 max: 1,
@@ -127,7 +120,7 @@
             },
             series: [{
                 name: null,
-                data: [1],
+                data: [0],
                 dataLabels: {
                     enabled: false,
                 }
