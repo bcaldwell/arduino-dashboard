@@ -3,7 +3,7 @@ var http = require('http');
 var fs = require('fs');
 var path = require('path');
 var mime = require('mime');
-var arduinoServer = require('./arduino_server');
+var arduinoServer = require('./arduino/arduino_server');
 var cache = {};
 var pins = {};
 
@@ -55,9 +55,9 @@ function serveStatic(response, cache, absPath) {
 var server = http.createServer(function (request, response) {
     var absPath = './';
     if (request.url == '/') {
-        absPath += 'angular\ rewrite/index.html';
+        absPath += 'public/index.html';
     } else {
-        absPath += 'angular\ rewrite' + request.url;
+        absPath += 'public' + request.url;
     }
 
     serveStatic(response, cache, absPath);

@@ -1,42 +1,41 @@
 body {
-  margin: 0px;
-  padding: 0px;
-  background-color: #000000;
+    margin: 0px;
+    padding: 0px;
+    background-color: #000000 !important;
 }
 
 .box {
-    height:50px;
-    line-height: 50px;
+    height: 150px;
+    font-size: 25px !important;
     min-width: 200px;
     max-width: 200px;
-    background: white;
     margin: 20px;
-    display: inline-block;
-    background: red;
-    border: 2px solid white;
+    display: inline-block !important;
 }
+
 #addBoxes {
-  width: 100%;
-  display: inline-block;
-  text-align: center;
-  /*background: rgba(255, 255, 255, 0.5);*/
+    width: 100%;
+    display: inline-block;
+    text-align: center;
+    /*background: rgba(255, 255, 255, 0.5);*/
 }
 
 #pinBoxes {
-    width: auto;
-    display: inline-block;
-    text-align: center;
+    /*    width: 100%;*/
+    /*    display: inline-block;*/
+    
+    text-align: center !important;
     /*background:black;*/
 }
 
 .bar {
-  display: block;
-  height: 50px;
-  width: 100%;
-  background-color: rgba(255, 255, 255, 0.2);
-  margin-bottom: 10px;
+    display: block;
+    padding: 10px;
+    width: 100%;
+    background-color: rgba(255, 255, 255, 0.2);
+    margin-bottom: 10px;
 }
 
-#pin-setup{
-  text-align:center;
+#pin-setup {
+    text-align: center;
 }

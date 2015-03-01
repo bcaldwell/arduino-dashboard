@@ -1,52 +1,84 @@
-<!doctype html>
-<html lang="en" ng-app="myApp" class="no-js">
+<!DOCTYPE html>
+<html lang="en" ng-app="arduino">
 
 <head>
-    
-    <meta charset="utf-8">
     <title>Arduino</title>
+    <meta charset="utf-8">
     <link rel="stylesheet" href="css/style.css" type="text/css">
-    <!--    <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.3.2/angular.min.js"></script>-->
+    <link rel="stylesheet" href="css/bstandard.css" type="text/css">
+    <script src="http://code.jquery.com/jquery.min.js"></script>
 
-    <!--    <script scr="js/angular.js"></script>-->
-    <script src="js/angular/angular.min.js"></script>
+    <!--    bootstrap-->
+    <link href="components/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
+    <script src="components/bootstrap/dist/js/bootstrap.min.js"></script>
 
-    <script src="app.js"></script>
+    <!--    angular-->
+    <script src="components/angular/angular.min.js"></script>
+    <script type="text/javascript" src="app.js"></script>
 
-    <!--    <script src="/socket.io/socket.io.js" type="text/javascript"></script>-->
-    <!--    <script src="http://code.jquery.com/jquery-1.8.0.min.js" type="text/javascript"></script>-->
-    <!--  <script src="javascripts/script.js" type="text/javascript"></script>-->
+    <script src="components/angular-filter/dist/angular-filter.min.js"></script>
+    <script src="js/dependences/ui-bootstrap.js"></script>
+
+
+    <!--    highcharts-->
+    <script src="components/highcharts-ng/dist/highcharts-ng.min.js"></script>
+    <script src="components/highcharts/highcharts.js"></script>
+    <script src="components/highcharts/highcharts-more.js"></script>
+    <script src="js/dependences/solid-gauge.js"></script>
+
+    <!--    socket.io-->
+    <script src="/socket.io/socket.io.js" type="text/javascript"></script>
 
 </head>
 
 <body>
+    <nav class="navbar navbar-default" style="border-radius: 0;">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <a class="navbar-brand" href="#">
+                    Arduino Controller
+                </a>
+            </div>
+        </div>
+    </nav>
 
-    <!--
-    <div ng-controller="GreetingController" style="color:white">
-        {{ greeting }}
+
+    <form ng-controller="addPinController as addPin" class="bar" id="pin-setup" role="form">
+        <select ng-model="addPin.selectedPin" ng-options="test for test in addPin.pins" id="pin-selection" class="form-control" style="max-width: 100px; display: inline-block; text-align: center;">
+            <option value="">Select pin</option>
+        </select>
+
+        <div class="btn-group">
+            <label class="btn btn-default" ng-model="addPin.selectedType" ng-model="radioModel" btn-radio="'Digital Write'" uncheckable>Digital Write</label>
+            <label class="btn btn-default" ng-model="addPin.selectedType" ng-model="radioModel" btn-radio="'Digital Read'" uncheckable>Digital Read</label>
+        </div>
+
+        <input class="btn btn-success" value="Add pin {{addPin.selectedPin}} {{addPin.selectedType ? 'as ' + addPin.selectedType : null}}" ng-disabled="addPin.selectClass()" type="submit" style="min-width: 150px" ng-click="addPin.addPin()">
+    </form>
+
+
+
+    <div ng-controller="pinController as pins " class="container" id="pinBoxes">
+        <div ng-show="pins.count()" ng-repeat="pin in pins.pins | toArray | orderBy: 'id'" class="box">
+            <div class="fill-space btn inline-table" ng-class="pins.selectClass(pin) " ng-click="pins.toggle(pin)" ng-show="pin.type == 'Digital Write'">
+                <div class="table-center font-20"> Pin {{pin.pin}} {{pin.type}}</div>
+
+            </div>
+
+            <div ng-show="pin.type == 'Digital Read'" ng-init="highcharts.init(pin)" ng-controller="highchartsController as highcharts" class="fill-space btn btn-default">
+                <div class=" center font-20 full-width "> Pin {{pin.pin}}</div>
+                <highchart id="chart1 " config="highcharts.solidGaugeSmall " style="height: 120px; width: 100%; background: transparent; "></highchart>
+            </div>
+
+
+        </div>
+        <div class="box btn btn-warning table " style="min-width: 100% " ng-hide="pins.count() ">
+            <div class="table-center ">
+                Add a pin to get started
+            </div>
+        </div>
+
     </div>
--->
-
-    <div class="bar" style="background-color:white;">
-
-    </div>
-
-    <div class="bar">
-        1+2 = {{1+3}}
-        <form id="pin-setup">
-            <select id="pin-selection">
-            </select>
-            <input value="Add pin" type="submit">
-        </form>
-    </div>
-    <!--
-  <div id="addBoxes">
-    <div class="box">Add pin</div>
-  </div> -->
-    <div id="pinBoxes">
-    </div>
-
-
 </body>
 
 </html>

@@ -6,5 +6,8 @@
         "socket.io": "latest",
         "mime": "~1.2.7",
         "johnny-five": "latest"
+    },
+    "scripts": {
+        "postinstall": "bower install"
     }
 }
