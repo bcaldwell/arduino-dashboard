@@ -1,16 +1,16 @@
 {
-    "name": "node-arduino",
-    "version": "0.0.1",
-    "description": "arduino",
-    "dependencies": {
-        "socket.io": "latest",
-        "mime": "~1.2.7",
-        "johnny-five": "latest"
-    },
-    "scripts": {
-        "postinstall": "bower install",
-
-        "prestart": "npm install",
-        "start": "node index.js"
-    }
+  "name": "node-arduino",
+  "version": "0.0.1",
+  "description": "arduino",
+  "dependencies": {
+    "johnny-five": "latest",
+    "mime": "~1.2.7",
+    "serialport": "^1.5.0",
+    "socket.io": "latest"
+  },
+  "scripts": {
+    "postinstall": "bower install",
+    "prestart": "npm install",
+    "start": "node index.js"
+  }
 }
