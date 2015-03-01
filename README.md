@@ -31,6 +31,7 @@ We have preconfigured `npm` to automatically run `bower` so we can simply do:
 
 ```
 npm install
+```
 
 ### Run the Application
 
