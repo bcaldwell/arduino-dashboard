@@ -15,7 +15,7 @@ its package manager (npm) installed.  You can get them from [http://nodejs.org/]
 
 ### Clone node-arduino
 
-Clone the node-arduino repository using [git][git]:
+Clone the node-arduino repository using [git](http://git-scm.com/):
 
 ```
 git clone https://github.com/benjamincaldwell/node-arduino.git
@@ -24,8 +24,8 @@ cd node-arduino
 
 ### Install Dependencies
 
-* We get the server tools we depend upon via `npm`, the [node package manager][npm].
-* We get the browser code via `bower`, a [client-side code package manager][bower].
+* We get the server tools we depend upon via `npm`, the [npm](https://docs.npmjs.com/getting-started/installing-node).
+* We get the browser code via `bower`, a [bower](http://bower.io/#install-bower).
 
 We have preconfigured `npm` to automatically run `bower` so we can simply do:
 
