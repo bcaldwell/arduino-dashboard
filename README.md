@@ -36,6 +36,11 @@ npm install
 ### Run the Application
 
 ```
+node index.js
+```
+
+or 
+```
 npm start
 ```
 
