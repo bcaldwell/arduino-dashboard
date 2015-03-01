@@ -65,7 +65,7 @@
 
             </div>
 
-            <div ng-show="pin.type == 'Digital Read'" ng-controller="highchartsController as highcharts" ng-init="highcharts.init(pin)" class="fill-space btn btn-default">
+            <div ng-show="pin.type == 'Digital Read'" ng-init="highcharts.init(pin)" ng-controller="highchartsController as highcharts" class="fill-space btn btn-default">
                 <div class=" center font-20 full-width "> Pin {{pin.pin}}</div>
                 <highchart id="chart1 " config="highcharts.solidGaugeSmall " style="height: 120px; width: 100%; background: transparent; "></highchart>
             </div>

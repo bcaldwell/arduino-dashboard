@@ -59,11 +59,16 @@
         var that = this;
         this.init = function (pin) {
             that.pin = pin;
-            that.pin.status = 0;
 
             $scope.$watch(function () {
+                if (that.solidGaugeSmall.getHighcharts().series[0]) {
+                    var chart = that.solidGaugeSmall.getHighcharts();
+                    var point = chart.series[0].points[0];
+                    point.update(that.pin.status);
+                }
                 return that.pin.status;
             }, function (newValue, oldValue) {
+                console.log(that.pin.status);
                 if (that.solidGaugeSmall.getHighcharts().series[0]) {
                     var chart = that.solidGaugeSmall.getHighcharts();
                     var point = chart.series[0].points[0];
@@ -120,7 +125,10 @@
             },
             series: [{
                 name: null,
-                data: [0],
+                data: (function () {
+                    console.log(that.pin);
+                    return [0];
+                })(),
                 dataLabels: {
                     enabled: false,
                 }
@@ -143,7 +151,6 @@
         }
 
         socket.on('digital:change', function (data) {
-            console.log(data);
             if (pinFactory.pins[data.pin]) {
                 pinFactory.pins[data.pin].status = data.status;
             };

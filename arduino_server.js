@@ -20,7 +20,6 @@ exports.listen = function (server, arduino, pins) {
                 else if (data.type === "Digital Read")
                     pins[data.pin] = new digitalRead(arduino, io, data.pin);
             }
-            console.log(pins[data.pin].getStatus())
             fn(pins[data.pin].getStatus());
         });
 
