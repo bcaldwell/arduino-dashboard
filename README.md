@@ -24,8 +24,8 @@ cd node-arduino
 
 ### Install Dependencies
 
-* We get the server tools we depend upon via `npm`, the [npm](https://docs.npmjs.com/getting-started/installing-node).
-* We get the browser code via `bower`, a [bower](http://bower.io/#install-bower).
+* We get the server tools we depend upon via `npm`: [npm](https://docs.npmjs.com/getting-started/installing-node).
+* We get the browser code via `bower`: [bower](http://bower.io/#install-bower).
 
 We have preconfigured `npm` to automatically run `bower` so we can simply do:
 
