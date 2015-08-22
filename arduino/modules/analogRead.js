@@ -1,16 +1,16 @@
-var routeName = "digitalRead";
+var routeName = "analogRead";
 module.exports = {
-  name: "Digital Read",
+  name: "Analog Read",
   routeName: routeName,
   init: function(arduino, io, pin){
-    return new digitalRead (arduino, io, pin);
+    return new analogRead (arduino, io, pin);
   }
 };
 
 
 
 
-var digitalRead = function (arduino, io, pin) {
+var analogRead = function (arduino, io, pin) {
     var that = this;
 
     this.pin = pin;
@@ -18,14 +18,11 @@ var digitalRead = function (arduino, io, pin) {
     this.readPin = new arduino.Pin(this.pin);
 
     this.readPin.read(function (value, error) {
-      console.log (value);
         that.status = value;
-        if (that.status !== null){
-          io.sockets.emit(routeName + ':change', {
-              pin: that.pin,
-              status: that.status
-          });
-        }
+        io.sockets.emit(routeName + ':change', {
+            pin: that.pin,
+            status: that.status
+        });
     });
 
     this.getStatus = function () {

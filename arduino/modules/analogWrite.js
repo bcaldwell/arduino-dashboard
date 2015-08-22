@@ -1,13 +1,13 @@
-var routeName = "digitalWrite";
+var routeName = "analogWrite";
 module.exports = {
-  name: "Digital Write",
+  name: "Analog Write",
   routeName: routeName,
   init: function(arduino, io, pin) {
-    return new digitalWrite(arduino, pin);
+    return new analogWrite(arduino, pin);
   },
   route: function(data, fn, io, pins) {
     data = parseInt(data);
-    pins[data].toggle();
+    pins[data].write(100);
     io.sockets.emit(routeName + ':change', {
       pin: data,
       status: pins[data].getStatus()
@@ -17,22 +17,24 @@ module.exports = {
 };
 
 
-digitalWrite = function(arduino, pin) {
+analogWrite = function(arduino, pin) {
   this.pin = pin;
   this.status = 0;
-  this.writePin = new arduino.Pin(this.pin);
+  console.log (pin + "new pin");
+  this.writePin = new arduino.Led(this.pin);
 
-  this.on = function() {
-    this.writePin.write(1);
+  this.write = function(val) {
+    console.log ("writing");
+    this.writePin.brightness(val);
+    this.status = val;
+  };
+  this.off = function() {
+    this.writePin.on();
     this.status = 1;
   };
   this.off = function() {
-    this.writePin.write(0);
+    this.writePin.off();
     this.status = 0;
-  };
-  this.toggle = function() {
-    this.status = this.status * (-1) + 1;
-    this.writePin.write(this.status);
   };
   this.getStatus = function() {
     console.log(this.pin + " " + this.status);
