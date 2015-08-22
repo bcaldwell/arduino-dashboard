@@ -1,38 +1,45 @@
-var digitalWrite = require("./digitalWrite");
-var digitalRead = require("./digitalRead");
+var fs = require('fs');
 var socket = require('socket.io');
+var Q = require('q');
 var io;
 
-exports.listen = function (server, arduino, pins) {
+//read modules into json object
+//use q to read modules before continuing
+var modules = {};
+var deferred = Q.defer();
+fs.readdir('./arduino/modules', function(err, files) {
+  if (err) console.log(err);
+  for (var i = 0; i < files.length; i++) {
+    (function(i) {
+      var module = require('./modules/' + files[i]);
+      modules[module.name] = module;
+      if (i === files.length - 1) {
+        deferred.resolve();
+      }
+    })(i);
+  }
+});
+
+deferred.promise.then(function() {
+  exports.listen = function(server, arduino, pins) {
 
     io = socket.listen(server);
 
-    io.sockets.on('connection', function (socket) {
+    io.sockets.on('connection', function(socket) {
 
-        socket.on('new pin', function (data, fn) {
-            data.pin = parseInt(data.pin);
-            //            check if pin has been initialized
-            if (!(typeof pins[data.pin] === 'object')) {
-                console.log("Pin " + data.pin + " will be initialized");
-                if (data.type === "Digital Write")
-                    pins[data.pin] = new digitalWrite(arduino, data.pin);
-                else if (data.type === "Digital Read")
-                    pins[data.pin] = new digitalRead(arduino, io, data.pin);
-            }
-            fn(pins[data.pin].getStatus());
-        });
-
-        socket.on('digitalWrite', function (data, fn) {
-            data = parseInt(data);
-            pins[data].toggle();
-            io.sockets.emit('digital:change', {
-                pin: data,
-                status: pins[data].getStatus()
-            });
-            io.sockets.emit('digital:change', {
-                pin: 8,
-                status: pins[data].getStatus()
-            });
-        });
+      socket.on('new pin', function(data, fn) {
+        data.pin = parseInt(data.pin);
+        pins[data.pin] = modules[data.type].init(arduino, io,  data.pin);
+        fn(pins[data.pin].getStatus());
+      });
+      Object.keys(modules).forEach(function(name, i) {
+        console.log (i);
+        if (modules[name].route) {
+          socket.on(modules[name].routeName, function(data, fn) {
+            modules[name].route(data, fn, io, pins);
+          });
+        }
+      });
     });
-};
+  };
+});

@@ -35,13 +35,13 @@
     <nav class="navbar navbar-default" style="border-radius: 0;">
         <div class="container-fluid">
             <div class="navbar-header">
+              <!-- <img src="../icon_small.png" style="object-fit: cover;"> -->
                 <a class="navbar-brand" href="#">
                     Arduino Controller
                 </a>
             </div>
         </div>
     </nav>
-
 
     <form ng-controller="addPinController as addPin" class="bar" id="pin-setup" role="form">
         <select ng-model="addPin.selectedPin" ng-options="test for test in addPin.pins" id="pin-selection" class="form-control" style="max-width: 100px; display: inline-block; text-align: center;">

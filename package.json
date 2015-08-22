@@ -5,12 +5,12 @@
   "dependencies": {
     "johnny-five": "latest",
     "mime": "~1.2.7",
+    "q": "^1.4.1",
     "serialport": "^1.5.0",
     "socket.io": "latest"
   },
   "scripts": {
     "postinstall": "bower install",
-    "prestart": "npm install",
     "start": "node index.js"
   }
 }
