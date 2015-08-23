@@ -66,7 +66,6 @@ var server = http.createServer(function(request, response) {
 
 if (withArduino) {
   arduino.Board({repl:false}).on("ready", function() {
-
     arduinoServer.listen(server, arduino, pins);
     server.listen(8888, function() {
       console.log("Server listening on port 8888.");

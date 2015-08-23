@@ -21,7 +21,6 @@ fs.readdir('./arduino/modules', function(err, files) {
 });
 
 deferred.promise.then(function() {
-  console.log (modules);
   exports.listen = function(server, arduino, pins) {
 
     io = socket.listen(server);
@@ -36,7 +35,8 @@ deferred.promise.then(function() {
 
       socket.on('new pin', function(data, fn) {
         //todo only change if different otherwise dont do anything
-        data.pin = parseInt(data.pin);
+        !fn? fn = function(msg){io.to(this.id).emit(msg)}.bind(this): null;
+        //data.pin = parseInt(data.pin);
         pins[data.pin] = modules[data.type].init(arduino, io,  data.pin);
         fn(pins[data.pin].getStatus());
       });

@@ -6,11 +6,11 @@ module.exports = {
     return new digitalWrite(arduino, pin);
   },
   route: function(data, fn, io, pins) {
-    data = parseInt(data);
-    pins[data].toggle();
+    var pin = parseInt(data);
+    pins[pin].toggle();
     io.sockets.emit(routeName + ':change', {
-      pin: data,
-      status: pins[data].getStatus()
+      pin: pin,
+      status: pins[pin].getStatus()
     });
   },
   // update: function(){}

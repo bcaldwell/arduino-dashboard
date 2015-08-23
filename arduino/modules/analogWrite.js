@@ -6,12 +6,14 @@ module.exports = {
     return new analogWrite(arduino, pin);
   },
   route: function(data, fn, io, pins) {
-    data = parseInt(data);
-    pins[data].write(100);
-    io.sockets.emit(routeName + ':change', {
-      pin: data,
-      status: pins[data].getStatus()
-    });
+    if (data.pin && data.value) {
+      var pin = parseInt(data.pin);
+      pins[pin].write(parseInt(data.value));
+      io.sockets.emit(routeName + ':change', {
+        pin: pin,
+        status: pins[pin].getStatus()
+      });
+    }
   },
   // update: function(){}
 };
@@ -20,11 +22,11 @@ module.exports = {
 analogWrite = function(arduino, pin) {
   this.pin = pin;
   this.status = 0;
-  console.log (pin + "new pin");
+  console.log(pin + "new pin");
   this.writePin = new arduino.Led(this.pin);
 
   this.write = function(val) {
-    console.log ("writing");
+    val = inRange(val, 0, 255);
     this.writePin.brightness(val);
     this.status = val;
   };
@@ -40,4 +42,9 @@ analogWrite = function(arduino, pin) {
     console.log(this.pin + " " + this.status);
     return this.status;
   };
+};
+
+var inRange = function(val, min, max) {
+  val = (val > max) ? max : ((val < min) ? min : null);
+  return val;
 };
