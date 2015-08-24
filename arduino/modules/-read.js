@@ -1,13 +1,4 @@
-var routeName = "analogRead";
-module.exports = {
-  name: "Analog Read",
-  routeName: routeName,
-  init: function(arduino, io, pin) {
-    return new analogRead(arduino, io, pin);
-  },
-};
-
-var analogRead = function(arduino, io, pin) {
+var read = function(arduino, io, pin) {
   var that = this;
 
   this.pin = pin;
@@ -15,18 +6,14 @@ var analogRead = function(arduino, io, pin) {
   this.lastStatus = null;
   this.readPin = new arduino.Pin(this.pin);
   this.analogPin = true;
-  this.lastSendTime = 0;
 
   this.readPin.read(function(error, value) {
     that.setStatus(that.analogToDigital(value));
-    var time = Date.now();
-    if (that.status !== that.lastStatus && that.status !== null && time - that.lastSendTime > 100) {
-      // console.log (that.status);
+    if (that.status !== that.lastStatus && that.status !== null) {
       io.sockets.emit(routeName + ':change', {
         pin: that.pin,
         status: that.status
       });
-      that.lastSendTime = time;
     }
   });
 
@@ -38,6 +25,8 @@ var analogRead = function(arduino, io, pin) {
     this.status = status;
   };
   this.analogToDigital = function(val){
-    return val;
+    return (this.analogPin && val < 512?0:1);
   };
 };
+
+module.exports = read;

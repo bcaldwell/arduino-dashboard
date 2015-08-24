@@ -35,7 +35,7 @@
     <nav class="navbar navbar-default" style="border-radius: 0;">
         <div class="container-fluid">
             <div class="navbar-header">
-              <!-- <img src="../icon_small.png" style="object-fit: cover;"> -->
+                <!-- <img src="../icon_small.png" style="object-fit: cover;"> -->
                 <a class="navbar-brand" href="#">
                     Arduino Controller
                 </a>
@@ -49,8 +49,7 @@
         </select>
 
         <div class="btn-group">
-            <label class="btn btn-default" ng-model="addPin.selectedType" ng-model="radioModel" btn-radio="'Digital Write'" uncheckable>Digital Write</label>
-            <label class="btn btn-default" ng-model="addPin.selectedType" ng-model="radioModel" btn-radio="'Digital Read'" uncheckable>Digital Read</label>
+            <label ng-repeat="type in addPin.type track by $index" class="btn btn-default" ng-model="addPin.selectedType" ng-model="radioModel" btn-radio="'{{type}}'" uncheckable>{{type}}</label>
         </div>
 
         <input class="btn btn-success" value="Add pin {{addPin.selectedPin}} {{addPin.selectedType ? 'as ' + addPin.selectedType : null}}" ng-disabled="addPin.selectClass()" type="submit" style="min-width: 150px" ng-click="addPin.addPin()">
@@ -62,10 +61,17 @@
         <div ng-show="pins.count()" ng-repeat="pin in pins.pins | toArray | orderBy: 'id'" class="box">
             <div class="fill-space btn inline-table" ng-class="pins.selectClass(pin) " ng-click="pins.toggle(pin)" ng-show="pin.type == 'Digital Write'">
                 <div class="table-center font-20"> Pin {{pin.pin}} {{pin.type}}</div>
-
+            </div>
+            <div class="fill-space btn inline-table" ng-class="pins.selectClass(pin) " ng-click="pins.toggle(pin)" ng-show="pin.type == 'Analog Write'">
+                <div class="table-center font-20"> Analog Pin {{pin.pin}} {{pin.type}}</div>
             </div>
 
-            <div ng-show="pin.type == 'Digital Read'" ng-init="highcharts.init(pin)" ng-controller="highchartsController as highcharts" class="fill-space btn btn-default">
+            <div ng-show="pin.type == 'Digital Read'" ng-init="highcharts.init(pin, 1)" ng-controller="highchartsController as highcharts" class="fill-space btn btn-default">
+                <div class=" center font-20 full-width "> Pin {{pin.pin}}</div>
+                <highchart id="chart1 " config="highcharts.solidGaugeSmall " style="height: 120px; width: 100%; background: transparent; "></highchart>
+            </div>
+
+            <div ng-show="pin.type == 'Analog Read'" ng-init="highcharts.init(pin, 1023)" ng-controller="highchartsController as highcharts" class="fill-space btn btn-default">
                 <div class=" center font-20 full-width "> Pin {{pin.pin}}</div>
                 <highchart id="chart1 " config="highcharts.solidGaugeSmall " style="height: 120px; width: 100%; background: transparent; "></highchart>
             </div>

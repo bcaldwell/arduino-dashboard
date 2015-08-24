@@ -8,8 +8,8 @@
     });
 
     var that = this;
-    this.pins = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13];
-    this.type = ["Digital Write", "Digital Read"];
+    this.pins = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, "A0", "A1", "A2", "A3", "A4", "A5"];
+    this.type = ["Digital Write", "Analog Write", "Digital Read", "Analog Read"];
 
     this.selectClass = function() {
       if (that.selectedPin && that.selectedType) {
@@ -57,8 +57,9 @@
   app.controller('highchartsController', ['$scope', 'pinFactory', function($scope, pinFactory) {
 
     var that = this;
-    this.init = function(pin) {
+    this.init = function(pin, max) {
       that.pin = pin;
+      that.solidGaugeSmall.yAxis.max = max;
 
       $scope.$watch(function() {
         if (that.solidGaugeSmall.getHighcharts().series[0]) {
@@ -156,8 +157,9 @@
       }
     };
 
-    socket.on('digitalRead:change',digitalHandler);
-    socket.on('digitalWrite:change',digitalHandler);
+    socket.on('digitalRead:change', digitalHandler);
+    socket.on('digitalWrite:change', digitalHandler);
+    socket.on('analogRead:change', digitalHandler);
 
     return pinFactory;
   }]);
