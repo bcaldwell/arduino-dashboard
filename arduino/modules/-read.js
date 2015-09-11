@@ -1,4 +1,4 @@
-var read = function(arduino, io, pin) {
+var read = function(arduino, io, pin, analog = false, minDuration = 100) {
   var that = this;
 
   this.pin = pin;
@@ -6,14 +6,29 @@ var read = function(arduino, io, pin) {
   this.lastStatus = null;
   this.readPin = new arduino.Pin(this.pin);
   this.analogPin = true;
+  this.lastSendTime = 0;
+  this.analog = Boolean(analog);
+  this.minDuration = minDuration;
+  this.last = {
+    sendTime: 0,
+    sendStatus: null,
+    status: null
+  };
 
   this.readPin.read(function(error, value) {
-    that.setStatus(that.analogToDigital(value));
-    if (that.status !== that.lastStatus && that.status !== null) {
+    if (this.analog){
+      that.setStatus(value);
+    }else{
+      that.setStatus(that.analogToDigital(value));
+    }
+    var time = Date.now();
+    if (that.status !== that.last.status && that.status !== that.last.sendStatus && time - that.last.SentTime > that.minDuration) {
+      // console.log (that.status);
       io.sockets.emit(routeName + ':change', {
         pin: that.pin,
         status: that.status
       });
+      that.last.sendTime = time;
     }
   });
 
@@ -21,12 +36,16 @@ var read = function(arduino, io, pin) {
     return this.status;
   };
   this.setStatus = function(status){
-    this.lastStatus = this.status;
+    this.last.status = this.status;
     this.status = status;
   };
   this.analogToDigital = function(val){
     return (this.analogPin && val < 512?0:1);
   };
+  //remove this
+  this.isAnalog = function(pin){
+    return arduino.isAnalog(pin);
+  };
 };
 
-module.exports = read;
+modules.exports = read;
