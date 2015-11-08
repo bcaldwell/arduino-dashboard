@@ -17,7 +17,7 @@ module.exports = {
 };
 
 
-digitalWrite = function(arduino, pin) {
+var digitalWrite = function(arduino, pin) {
   this.pin = pin;
   this.status = 0;
   this.writePin = new arduino.Pin(this.pin);

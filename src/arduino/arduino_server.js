@@ -1,30 +1,32 @@
+'use strict';
+
 var fs = require('fs');
 var socket = require('socket.io');
 var Q = require('q');
+var path = require('path');
 var io;
 
 //read modules into json object
 //use q to read modules before continuing
 var modules = {};
 var deferred = Q.defer();
-fs.readdir('./arduino/modules', function(err, files) {
+fs.readdir(path.resolve(__dirname + '/modules'), function(err, files) {
   if (err) console.log(err);
-  for (var i = 0; i < files.length; i++) {
-    (function(i) {
-      if (files[i][0] !== "-") {
+  for (let i = 0; i < files.length; i++) {
+    var file = files[i];
+    if (file[0] !== "-" && file.substr(file.length - 3) === ".js") {
 
-        var module = require('./modules/' + files[i]);
-        modules[module.name] = module;
-        if (i === files.length - 1) {
-          deferred.resolve();
-        }
+      var module = require('./modules/' + file);
+      modules[module.name] = module;
+    }
+    if (i === files.length - 1) {
+        deferred.resolve();
       }
-    })(i);
   }
 });
 
-deferred.promise.then(function() {
-  exports.listen = function(server, arduino, pins) {
+module.exports.listen = function(server, arduino, pins) {
+  deferred.promise.then(function() {
 
     io = socket.listen(server);
 
@@ -59,5 +61,5 @@ deferred.promise.then(function() {
         }
       });
     });
-  };
-});
+  });
+};

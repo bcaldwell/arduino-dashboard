@@ -44,3 +44,6 @@ or
 npm start
 ```
 go to [localhost:8888](localhost:8888).
+
+##Permission issue on linux
+see [https://github.com/rwaldron/johnny-five/issues/53](https://github.com/rwaldron/johnny-five/issues/53)

@@ -3,14 +3,21 @@
   "version": "0.0.1",
   "description": "arduino",
   "dependencies": {
+    "babel-cli": "^6.1.2",
+    "babel-preset-es2015": "^6.1.2",
+    "bower": "^1.6.5",
     "johnny-five": "latest",
     "mime": "~1.2.7",
     "q": "^1.4.1",
-    "serialport": "^1.5.0",
     "socket.io": "latest"
   },
   "scripts": {
-    "postinstall": "bower install",
-    "start": "node index.js"
+    "postinstall": "node node_modules/bower/bin/bower install",
+    "start": "node dist/index.js",
+    "build": "node node_modules/babel-cli/bin/babel src --out-dir dist --source-maps",
+    "build-watch": "node node_modules/babel-cli/bin/babel src --out-dir dist --source-maps -w"
+  },
+  "babel": {
+    "presets": ["es2015"]
   }
 }

@@ -1,4 +1,8 @@
-var read = function(arduino, io, pin, analog = false, minDuration = 100) {
+'use strict';
+
+var read = function read(arduino, io, pin, analog, minDuration) {
+  analog = analog || false;
+  minDuration = minDuration || 100;
   var that = this;
 
   this.pin = pin;
@@ -15,10 +19,10 @@ var read = function(arduino, io, pin, analog = false, minDuration = 100) {
     status: null
   };
 
-  this.readPin.read(function(error, value) {
-    if (this.analog){
+  this.readPin.read(function (error, value) {
+    if (this.analog) {
       that.setStatus(value);
-    }else{
+    } else {
       that.setStatus(that.analogToDigital(value));
     }
     var time = Date.now();
@@ -32,20 +36,21 @@ var read = function(arduino, io, pin, analog = false, minDuration = 100) {
     }
   });
 
-  this.getStatus = function() {
+  this.getStatus = function () {
     return this.status;
   };
-  this.setStatus = function(status){
+  this.setStatus = function (status) {
     this.last.status = this.status;
     this.status = status;
   };
-  this.analogToDigital = function(val){
-    return (this.analogPin && val < 512?0:1);
+  this.analogToDigital = function (val) {
+    return this.analogPin && val < 512 ? 0 : 1;
   };
   //remove this
-  this.isAnalog = function(pin){
+  this.isAnalog = function (pin) {
     return arduino.isAnalog(pin);
   };
 };
 
 modules.exports = read;
+//# sourceMappingURL=-read.js.map
