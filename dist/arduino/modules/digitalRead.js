@@ -1,54 +1,26 @@
 'use strict';
 
-var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
-
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var Read = require("./-read.js");
 
 var routeName = "digitalRead";
 
-var DigitalRead = (function () {
+var DigitalRead = (function (_Read) {
+  _inherits(DigitalRead, _Read);
+
   function DigitalRead(arduino, io, pin) {
     _classCallCheck(this, DigitalRead);
 
-    var self = this;
-    this.pin = "A0";
-    this.status = 0;
-    this.lastStatus = null;
-    this.readPin = new arduino.Pin(this.pin);
-    this.analogPin = true;
-
-    this.readPin.read(function (error, value) {
-      self.setStatus(self.analogToDigital(value));
-      console.log(value);
-      if (self.status !== self.lastStatus && self.status !== null) {
-        io.sockets.emit(routeName + ':change', {
-          pin: self.pin,
-          status: self.status
-        });
-      }
-    });
+    return _possibleConstructorReturn(this, Object.getPrototypeOf(DigitalRead).call(this, routeName, arduino, io, pin, false, 100));
   }
 
-  _createClass(DigitalRead, [{
-    key: "getStatus",
-    value: function getStatus() {
-      return this.status;
-    }
-  }, {
-    key: "setStatus",
-    value: function setStatus(status) {
-      this.lastStatus = this.status;
-      this.status = status;
-    }
-  }, {
-    key: "analogToDigital",
-    value: function analogToDigital(val) {
-      return this.analogPin && val < 512 ? 0 : 1;
-    }
-  }]);
-
   return DigitalRead;
-})();
+})(Read);
 
 module.exports = {
   name: "Digital Read",
@@ -58,35 +30,4 @@ module.exports = {
   },
   class: DigitalRead
 };
-
-// var digitalRead = function(arduino, io, pin) {
-//   var that = this;
-
-//   this.pin = "A2";
-//   this.status = 0;
-//   this.lastStatus = null;
-//   this.readPin = new arduino.Pin(this.pin);
-//   this.analogPin = true;
-
-//   this.readPin.read(function(error, value) {
-//     that.setStatus(that.analogToDigital(value));
-//     if (that.status !== that.lastStatus && that.status !== null) {
-//       io.sockets.emit(routeName + ':change', {
-//         pin: that.pin,
-//         status: that.status
-//       });
-//     }
-//   });
-
-//   this.getStatus = function() {
-//     return this.status;
-//   };
-//   this.setStatus = function(status){
-//     this.lastStatus = this.status;
-//     this.status = status;
-//   };
-//   this.analogToDigital = function(val){
-//     return (this.analogPin && val < 512?0:1);
-//   };
-// };
 //# sourceMappingURL=digitalRead.js.map

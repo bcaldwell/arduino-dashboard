@@ -1,56 +1,95 @@
 'use strict';
 
-var read = function read(arduino, io, pin, analog, minDuration) {
-  analog = analog || false;
-  minDuration = minDuration || 100;
-  var that = this;
+var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
 
-  this.pin = pin;
-  this.status = 0;
-  this.lastStatus = null;
-  this.readPin = new arduino.Pin(this.pin);
-  this.analogPin = true;
-  this.lastSendTime = 0;
-  this.analog = Boolean(analog);
-  this.minDuration = minDuration;
-  this.last = {
-    sendTime: 0,
-    sendStatus: null,
-    status: null
-  };
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-  this.readPin.read(function (error, value) {
-    if (this.analog) {
-      that.setStatus(value);
-    } else {
-      that.setStatus(that.analogToDigital(value));
+function setDefault(param, value) {
+  return typeof param === "undefined" ? value : param;
+}
+
+var Read = (function () {
+  function Read(routeName, arduino, io, pin, analog, minDuration) {
+    _classCallCheck(this, Read);
+
+    var self = this;
+
+    analog = setDefault(analog, false);
+    minDuration = setDefault(minDuration, 200);
+
+    this.routeName = routeName;
+    this.pin = pin;
+    this.arduino = arduino;
+
+    this.status = 0;
+    this.lastStatus = null;
+    this.readPin = new arduino.Pin(this.pin);
+
+    //is the selected pin an analog pin?
+    this.analogPin = this.isAnalog(pin);
+    this.lastSendTime = 0;
+
+    //analog mode or digital mode
+    this.analog = Boolean(analog);
+    this.minDuration = minDuration;
+    this.last = {
+      sendTime: 0,
+      sendStatus: null,
+      status: null
+    };
+
+    this.readPin.read(function (error, value) {
+      if (self.analog) {
+        self.setStatus(value);
+      } else {
+        self.setStatus(self.analogToDigital(value));
+      }
+      var time = Date.now();
+      if (self.status !== self.last.status && self.status !== self.last.sendStatus && time - self.last.sendTime > self.minDuration) {
+        io.sockets.emit(routeName + ':change', {
+          pin: self.pin,
+          status: self.status
+        });
+        self.last.sendTime = time;
+        self.last.sendStatus = self.status;
+      }
+    });
+  }
+
+  _createClass(Read, [{
+    key: 'getStatus',
+    value: function getStatus() {
+      return this.status;
     }
-    var time = Date.now();
-    if (that.status !== that.last.status && that.status !== that.last.sendStatus && time - that.last.SentTime > that.minDuration) {
-      // console.log (that.status);
-      io.sockets.emit(routeName + ':change', {
-        pin: that.pin,
-        status: that.status
-      });
-      that.last.sendTime = time;
+  }, {
+    key: 'setStatus',
+    value: function setStatus(status) {
+      this.last.status = this.status;
+      this.status = status;
     }
-  });
+  }, {
+    key: 'analogToDigital',
+    value: function analogToDigital(val) {
+      //only analog pin need the value adjected for digital read
+      if (this.analogPin) {
+        return this.analogPin && val < 512 ? 0 : 1;
+      } else {
+        return val;
+      }
+    }
+  }, {
+    key: 'isAnalog',
 
-  this.getStatus = function () {
-    return this.status;
-  };
-  this.setStatus = function (status) {
-    this.last.status = this.status;
-    this.status = status;
-  };
-  this.analogToDigital = function (val) {
-    return this.analogPin && val < 512 ? 0 : 1;
-  };
-  //remove this
-  this.isAnalog = function (pin) {
-    return arduino.isAnalog(pin);
-  };
-};
+    //remove this
+    value: function isAnalog(pin) {
+      return Boolean(this.arduino.Pin.isAnalog(pin));
+    }
+  }]);
 
-modules.exports = read;
+  return Read;
+})();
+
+;
+
+module.exports = Read;
 //# sourceMappingURL=-read.js.map

@@ -1,3 +1,5 @@
+'use strict';
+
 function setDefault(param, value) {
   return (typeof param === "undefined" ? value : param);
 }
@@ -31,18 +33,19 @@ class Read {
     };
 
     this.readPin.read(function (error, value) {
-      if (this.analog) {
+      if (self.analog) {
         self.setStatus(value);
       } else {
         self.setStatus(self.analogToDigital(value));
       }
       var time = Date.now();
-      if (self.status !== self.last.status && self.status !== self.last.sendStatus && time - self.last.SentTime > self.minDuration) {
+      if (self.status !== self.last.status && self.status !== self.last.sendStatus && time - self.last.sendTime > self.minDuration) {
         io.sockets.emit(routeName + ':change', {
           pin: self.pin,
           status: self.status
         });
         self.last.sendTime = time;
+        self.last.sendStatus = self.status;
       }
     });
   }
@@ -64,7 +67,7 @@ class Read {
   };
   //remove this
   isAnalog(pin) {
-    return this.arduino.isAnalog(pin);
+    return Boolean(this.arduino.Pin.isAnalog(pin));
   };
 };
 
