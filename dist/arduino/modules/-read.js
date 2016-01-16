@@ -10,9 +10,11 @@ function setDefault(param, value) {
 
 var Read = (function () {
   function Read(routeName, arduino, io, pin, analog, minDuration) {
+    var _this = this;
+
     _classCallCheck(this, Read);
 
-    var self = this;
+    // var self = this;
 
     analog = setDefault(analog, false);
     minDuration = setDefault(minDuration, 200);
@@ -39,19 +41,19 @@ var Read = (function () {
     };
 
     this.readPin.read(function (error, value) {
-      if (self.analog) {
-        self.setStatus(value);
+      if (_this.analog) {
+        _this.setStatus(value);
       } else {
-        self.setStatus(self.analogToDigital(value));
+        _this.setStatus(_this.analogToDigital(value));
       }
       var time = Date.now();
-      if (self.status !== self.last.status && self.status !== self.last.sendStatus && time - self.last.sendTime > self.minDuration) {
+      if (_this.status !== _this.last.status && _this.status !== _this.last.sendStatus && time - _this.last.sendTime > _this.minDuration) {
         io.sockets.emit(routeName + ':change', {
-          pin: self.pin,
-          status: self.status
+          pin: _this.pin,
+          status: _this.status
         });
-        self.last.sendTime = time;
-        self.last.sendStatus = self.status;
+        _this.last.sendTime = time;
+        _this.last.sendStatus = _this.status;
       }
     });
   }

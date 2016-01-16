@@ -6,11 +6,11 @@ function setDefault(param, value) {
 
 class Read {
   constructor(routeName, arduino, io, pin, analog, minDuration) {
-    var self = this;
+    // var self = this;
 
     analog = setDefault(analog, false);
     minDuration = setDefault(minDuration, 200);
-    
+
     this.routeName = routeName;
     this.pin = pin;
     this.arduino = arduino;
@@ -18,11 +18,11 @@ class Read {
     this.status = 0;
     this.lastStatus = null;
     this.readPin = new arduino.Pin(this.pin);
-    
+
     //is the selected pin an analog pin?
     this.analogPin = this.isAnalog(pin);
     this.lastSendTime = 0;
-    
+
     //analog mode or digital mode
     this.analog = Boolean(analog);
     this.minDuration = minDuration;
@@ -32,20 +32,20 @@ class Read {
       status: null
     };
 
-    this.readPin.read(function (error, value) {
-      if (self.analog) {
-        self.setStatus(value);
+    this.readPin.read((error, value) => {
+      if (this.analog) {
+        this.setStatus(value);
       } else {
-        self.setStatus(self.analogToDigital(value));
+        this.setStatus(this.analogToDigital(value));
       }
       var time = Date.now();
-      if (self.status !== self.last.status && self.status !== self.last.sendStatus && time - self.last.sendTime > self.minDuration) {
+      if (this.status !== this.last.status && this.status !== this.last.sendStatus && time - this.last.sendTime > this.minDuration) {
         io.sockets.emit(routeName + ':change', {
-          pin: self.pin,
-          status: self.status
+          pin: this.pin,
+          status: this.status
         });
-        self.last.sendTime = time;
-        self.last.sendStatus = self.status;
+        this.last.sendTime = time;
+        this.last.sendStatus = this.status;
       }
     });
   }
