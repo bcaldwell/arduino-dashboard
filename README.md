@@ -49,7 +49,7 @@ go to [localhost:8888](localhost:8888).
 see [https://github.com/rwaldron/johnny-five/issues/53](https://github.com/rwaldron/johnny-five/issues/53)
 
 ##License
-The MIT License (MIT)
+The MIT License ([MIT](LICENSE))
 
 Copyright (c) 2016 Benjamin Caldwell
 
