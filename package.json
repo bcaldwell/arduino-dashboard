@@ -10,14 +10,17 @@
     "johnny-five": "latest",
     "mime": "~1.2.7",
     "q": "^1.4.1",
-    "socket.io": "latest"
+    "socket.io": "latest",
+    "snyk": "^1.189.0"
   },
   "scripts": {
     "postinstall": "node node_modules/bower/bin/bower install",
     "start": "node dist/index.js",
     "build": "node node_modules/babel-cli/bin/babel src --out-dir dist --source-maps",
     "build-watch": "node node_modules/babel-cli/bin/babel src --out-dir dist --source-maps -w",
-    "electron": "electron main.js"
+    "electron": "electron main.js",
+    "snyk-protect": "snyk protect",
+    "prepublish": "npm run snyk-protect"
   },
   "babel": {
     "presets": [
@@ -26,5 +29,6 @@
   },
   "devDependencies": {
     "electron-prebuilt": "^0.36.4"
-  }
+  },
+  "snyk": true
 }
